@@ -25,7 +25,7 @@ For frontend hot reload, leave the API running and open a second PowerShell wind
 
 ```powershell
 Set-Location .\frontend # Enters the frontend project.
-npm run dev # Starts Vite and proxies local /api requests to the HTTPS API.
+npm.cmd run dev # Starts Vite and proxies local /api requests to the HTTPS API.
 ```
 
 ## Azure deployment
