@@ -1,0 +1,16 @@
+publish-check/
+**/bin/
+**/obj/
+**/node_modules/
+**/wwwroot/
+.vs/
+**/appsettings.json
+**/appsettings.Development.json
+**/Properties/PublishProfiles/
+*.pubxml
+*.user
+**/.env
+**/.env.*
+ForgeAndFade/
+**/Properties/ServiceDependencies/
+**/Properties/serviceDependencies*.json
