@@ -22,9 +22,16 @@ public static class DemoSeed // Groups the sample catalogue setup in one class.
             if (!exists) db.Barbers.Add(barber); // Queues only a missing barber for insertion.
         } // Ends the check and moves to the next barber.
 
-        if (!await db.Services.AnyAsync()) // Adds sample services only when the services table is empty.
-        { // Begins the service-seeding condition.
-            db.Services.AddRange(new[] // Queues the standard services for insertion.
+        var existingServices = await db.Services.OrderBy(service => service.ServiceId).ToListAsync();
+        foreach (var group in existingServices.Where(service => service.IsActive)
+                     .GroupBy(service => ServiceCatalogue.NameKey(service.ServiceName)))
+        {
+            // Preserve every record and booking reference; only retire extra active copies.
+            foreach (var duplicate in group.Skip(1)) duplicate.IsActive = false;
+        }
+
+        var knownNames = existingServices.Select(service => ServiceCatalogue.NameKey(service.ServiceName)).ToHashSet();
+        var sampleServices = new[]
             { // Begins the service collection.
                 new Service { ServiceName = "Signature cut", Description = "Consultation, precision cut and finish.", Price = 320, DurationMinutes = 45, IsActive = true }, // Defines the signature cut.
                 new Service { ServiceName = "Skin fade", Description = "Detailed fade with a crisp finish.", Price = 350, DurationMinutes = 45, IsActive = true }, // Defines the skin fade.
@@ -32,9 +39,18 @@ public static class DemoSeed // Groups the sample catalogue setup in one class.
                 new Service { ServiceName = "Cut & beard", Description = "A complete haircut and beard service.", Price = 480, DurationMinutes = 75, IsActive = true }, // Defines the combined service.
                 new Service { ServiceName = "Scissor cut", Description = "Tailored scissor work with styling.", Price = 380, DurationMinutes = 60, IsActive = true }, // Defines the scissor cut.
                 new Service { ServiceName = "Junior cut", Description = "A considered cut for ages 6–12.", Price = 240, DurationMinutes = 30, IsActive = true }, // Defines the junior cut.
-                new Service { ServiceName = "The full ritual", Description = "Cut, beard and finishing treatment.", Price = 650, DurationMinutes = 90, IsActive = true } // Defines the premium service.
-            }); // Ends and queues the service collection.
-        } // Ends the service-seeding condition.
+                new Service { ServiceName = "The full ritual", Description = "Cut, beard and finishing treatment.", Price = 650, DurationMinutes = 90, IsActive = true }, // Defines the premium service.
+                // PROVISIONAL prices (ZAR) and durations: review before publishing.
+                new Service { ServiceName = "Cut and hair colouring", Description = "Precision cut, hair colouring and finish.", Price = 750, DurationMinutes = 120, IsActive = true },
+                new Service { ServiceName = "Highlights", Description = "Highlights with a finished style.", Price = 650, DurationMinutes = 120, IsActive = true },
+                new Service { ServiceName = "Dread retwist and fade", Description = "Dread retwist with a detailed fade.", Price = 550, DurationMinutes = 120, IsActive = true },
+                new Service { ServiceName = "Hair twists and fade", Description = "Hair twists with a detailed fade.", Price = 500, DurationMinutes = 90, IsActive = true }
+            };
+        foreach (var service in sampleServices)
+        {
+            // Include inactive names in this check so repeat seeding respects retired services.
+            if (knownNames.Add(ServiceCatalogue.NameKey(service.ServiceName))) db.Services.Add(service);
+        }
 
         await db.SaveChangesAsync(); // Writes any newly queued barbers or services to the database.
     } // Ends the Apply method.

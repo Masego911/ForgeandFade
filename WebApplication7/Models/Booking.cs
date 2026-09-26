@@ -1,9 +1,11 @@
-﻿using ForgeAndFade.Api.Enums; // Imports the BookingStatus enum so this model can use strongly typed booking states.
+using ForgeAndFade.Api.Enums; // Imports the BookingStatus enum so this model can use strongly typed booking states.
 
 namespace ForgeAndFade.Api.Models // Places the Booking model inside the application's Models namespace.
 {
     public class Booking // Represents one appointment created by a customer.
     {
+        public bool IsForChild { get; set; } // Explicit recipient; legacy bookings remain self appointments.
+
         public int BookingId { get; set; } // Stores the unique primary-key identifier for the booking.
 
         public int CustomerId { get; set; } // Stores the foreign-key identifier of the customer who made the booking.

@@ -1069,7 +1069,7 @@ p {
     font-weight: 700
 }
 
-    .field input, .field textarea {
+    .field input, .field textarea, .field select {
         width: 100%;
         padding: 1rem;
         border: 1px solid #a9a29a;
@@ -1921,3 +1921,115 @@ p {
     color: #625a50
 }
 /* Tells visitors not to enter private information. */
+/* Keeps the navigation text in the studio palette on mobile browsers. */
+.header .nav a, .header .nav a:visited { color: #ddd9d2; }
+/* Prevents browser link styling from turning barber names bright blue. */
+.barber-card .card-caption h3 { color: #191919; }
+/* Keeps barber profile links in the studio palette. */
+.barber-card .mobile-card-links a, .barber-card .mobile-card-links a:visited { color: #8b6744; }
+/* Adjusts mobile portraits without changing the desktop card layout. */
+@media (max-width: 520px) {
+    /* Gives each portrait enough height to include the face and upper body. */
+    .barber-image { aspect-ratio: 3 / 4; }
+    /* Fills the taller portrait frame instead of using the earlier square crop. */
+    .barber-image img { width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; object-position: center 18%; }
+    /* Centres the video behind the home-page content on a narrow screen. */
+    .hero-video { object-position: center; }
+}
+/* Mobile portrait and colour correction 2026-09-26. */
+.barber-card .card-caption h3, .choice-card h3 { color: #191919 !important; -webkit-text-fill-color: #191919; }
+.modal-close, .modal-close:visited { color: #191919 !important; -webkit-text-fill-color: #191919; }
+.quiet-button, .quiet-button:visited { color: #6d543a !important; -webkit-text-fill-color: #6d543a; }
+.header .nav a, .header .nav a:visited { color: #ddd9d2 !important; -webkit-text-fill-color: #ddd9d2; }
+@media (max-width: 520px) { /* Limits the following corrections to narrow screens. */
+.barber-image { aspect-ratio: auto !important; height: auto !important; overflow: visible !important; } /* Lets portrait height follow the actual image. */
+.barber-image img { display: block; width: 100%; height: auto !important; aspect-ratio: auto !important; max-height: none !important; object-fit: contain !important; } /* Displays each complete portrait. */
+.barber-card .mobile-card-links a, .barber-card .mobile-card-links a:visited { color: #8b6744 !important; } /* Styles the card actions consistently. */
+.chat-assistant { right: .6rem; bottom: calc(.6rem + env(safe-area-inset-bottom)); } /* Moves chat closer to the screen corner. */
+.chat-launcher { padding: .65rem .8rem; font-size: .75rem; } /* Makes the floating Help button compact. */
+.profile-page > img { height: auto !important; max-height: none !important; object-fit: contain !important; } /* Displays the profile portrait at its natural proportions. */
+.profile-page > div { padding: 3rem 1.25rem 5rem !important; } /* Keeps profile text readable below the portrait. */
+} /* Ends the narrow-screen corrections. */
+
+.founder-portrait { display: block; width: min(100%, 440px); height: auto; margin-top: 2rem; } /* Keeps the founder portrait proportional on desktop and mobile. */
+
+/* Booking mobile card correction 2026-09-26. */
+.choice strong { color: #191919 !important; -webkit-text-fill-color: #191919 !important; } /* Keeps service and barber names dark, including selected buttons. */
+.choice, .choice:visited { color: #191919; } /* Gives booking buttons an explicit text colour. */
+.modal-close, .quiet-button { color: #191919 !important; -webkit-text-fill-color: #191919 !important; } /* Corrects the welcome controls. */
+@media (max-width: 520px) { /* Applies portrait sizing only to mobile screens. */
+.barber-choices .choice img { display: block; width: calc(100% + 2.6rem); height: auto !important; max-height: none !important; aspect-ratio: auto !important; object-fit: contain !important; } /* Shows the complete booking portrait. */
+.chat-assistant { right: .5rem !important; bottom: calc(.5rem + env(safe-area-inset-bottom)) !important; } /* Positions chat at the screen edge. */
+.chat-launcher { padding: .55rem .7rem !important; font-size: .75rem !important; } /* Reduces the size of the floating button. */
+} /* Ends mobile booking rules. */
+
+/* Unified barber cards 2026-09-26. */
+.barber-grid { align-items: stretch; } /* Makes cards in each grid row the same height. */
+.barber-card, .barber-choices .choice { overflow: hidden; border: 1px solid #ddd6ca; border-radius: 22px; background: #f8f6f1; box-shadow: 0 8px 24px #17171712; } /* Shares the rounded card appearance. */
+.barber-card { display: flex; flex-direction: column; } /* Keeps the team card image and details vertically aligned. */
+.barber-card .barber-image { width: 100%; height: auto; aspect-ratio: 3 / 4 !important; overflow: hidden !important; background: #242321; } /* Reserves the same portrait space for every team member. */
+.barber-card .barber-image img { display: block; width: 100%; height: 100% !important; aspect-ratio: auto !important; object-fit: contain !important; object-position: center; transform: none !important; } /* Fits the full image without cutting off a face. */
+.barber-card .card-caption { display: flex; flex: 1; flex-direction: column; gap: .35rem; padding: 1.25rem; } /* Gives every team card the same text spacing. */
+.barber-card .card-caption h3 { margin: 0; color: #191919 !important; -webkit-text-fill-color: #191919 !important; } /* Keeps barber names dark. */
+.barber-card .card-caption p { margin: 0 0 1.25rem; color: #676059; } /* Keeps the speciality beneath the name. */
+.barber-card .card-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: auto; } /* Keeps actions at the bottom of the card. */
+.barber-card .card-actions a { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: .55rem .85rem; border-radius: 999px; background: #e9e2d7; color: #191919 !important; font-size: .75rem; font-weight: 700; } /* Styles profile links as compact actions. */
+.barber-card .card-actions a:last-child { background: #c6a77f; } /* Makes Book the primary card action. */
+.barber-choices .choice { padding: 0; gap: 0; min-height: 0; } /* Removes the old inset image layout from booking cards. */
+.barber-choices .choice img { display: block; width: 100% !important; height: auto !important; margin: 0 !important; max-height: none !important; aspect-ratio: 3 / 4 !important; object-fit: contain !important; object-position: center; background: #242321; } /* Shows a complete portrait in every booking card. */
+.barber-choices .choice strong { display: block; padding: 1.1rem 1.1rem .25rem; color: #191919 !important; -webkit-text-fill-color: #191919 !important; } /* Positions the barber name beneath the image. */
+.barber-choices .choice span { display: block; padding: 0 1.1rem 1rem; color: #676059; } /* Positions the speciality beneath the name. */
+.barber-choices .choice::after { content: 'Choose barber'; align-self: flex-start; margin: auto 1.1rem 1.1rem; padding: .65rem 1rem; border-radius: 999px; background: #e9e2d7; color: #191919; font-size: .75rem; font-weight: 700; } /* Shows that the whole card can be selected. */
+.barber-choices .choice.selected::after { content: 'Selected'; background: #c6a77f; } /* Confirms the selected barber. */
+@media (max-width: 900px) { .barber-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); } } /* Uses two booking columns on tablets. */
+@media (max-width: 520px) { .barber-choices { grid-template-columns: 1fr; } .barber-card .card-caption { padding: 1.1rem; } } /* Uses one card per row on phones. */
+
+/* Full barber profile portrait with navigation spacing. */
+.profile-page { padding-top: 35px; align-items: start; } /* Creates a 20px gap below the navigation. */
+.profile-page > img { display: block; width: 100%; height: auto !important; max-height: none !important; object-fit: contain !important; object-position: center top; align-self: start; } /* Shows the full portrait from its top edge. */
+@media (max-width: 780px) { .profile-page { padding-top: 35px; } .profile-page > img { width: 100%; height: auto !important; max-height: none !important; } } /* Keeps the same gap and full portrait on tablets and phones. */
+
+/* Keeps each barber card square and lets its image reach the card edges. */
+.barber-card { border-radius: 0 !important; overflow: hidden; padding: 0 !important; }
+/* Gives every card image the same sized area without an inset. */
+.barber-card .barber-image { width: 100%; aspect-ratio: 4 / 5; margin: 0 !important; padding: 0 !important; border-radius: 0 !important; overflow: hidden; }
+/* Fills the image area while keeping the portrait proportions intact. */
+.barber-card .barber-image img { display: block; width: 100%; height: 100% !important; aspect-ratio: auto !important; object-fit: cover !important; object-position: center 25%; border-radius: 0 !important; }
+/* Removes rounded corners from the card actions. */
+.barber-card a, .barber-card button { border-radius: 0 !important; }
+
+
+/* Gives buttons and barber-card links straight rectangular corners. */
+button, .button, .barber-card a, .chat-launcher { border-radius: 0 !important; }
+
+
+/* Removes decorative icons generated inside action buttons. */
+.button > span[aria-hidden], .button::after, .text-link::after { display: none !important; content: none !important; }
+
+
+/* Native modal keeps focus within the appointment cancellation decision. */
+.cancel-appointment-dialog {
+    width: min(92vw, 560px);
+    max-height: 90dvh;
+    overflow-y: auto;
+    margin: auto;
+    padding: clamp(1.25rem, 4vw, 2rem);
+    border: 1px solid #b3a38d;
+    background: #f3f0e9;
+    color: #191919;
+    box-shadow: 0 22px 80px #0007;
+}
+.cancel-appointment-dialog::backdrop { background: #000a; }
+.cancel-appointment-dialog h2 { font-size: 2rem; }
+.cancel-appointment-dialog p { overflow-wrap: anywhere; }
+.cancel-appointment-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+.cancel-appointment-actions .button { flex: 1 1 190px; border-radius: 0; }
+.cancel-appointment-actions .button:focus-visible { outline: 3px solid #191919; outline-offset: 3px; }
+
+.history-card button.text-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; margin: 16px 12px 0 0; padding: 12px 18px; border: 1px solid #8b6846; border-radius: 0; background: transparent; color: #1b1b1b; text-decoration: none; line-height: 1.2; cursor: pointer; } /* Separates and sizes appointment actions as rectangular buttons. */
+.history-card button.text-link:last-of-type { background: #1b1b1b; color: #fff; border-color: #1b1b1b; } /* Gives the cancellation action a distinct appearance. */
+@media (max-width: 560px) { .history-card button.text-link { display: flex; width: 100%; margin-right: 0; } } /* Stacks the buttons on narrow mobile screens. */
+
+.history-card a.text-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; margin: 16px 12px 0 0; padding: 12px 18px; border: 1px solid #8b6846; border-radius: 0; background: transparent; color: #1b1b1b; text-decoration: none; line-height: 1.2; vertical-align: top; } /* Styles the Reschedule link as a separate rectangular action. */
+.history-card a.text-link:hover, .history-card a.text-link:focus-visible { background: #e7dac9; } /* Makes mouse and keyboard focus visible. */
+@media (max-width: 560px) { .history-card a.text-link { display: flex; width: 100%; margin-right: 0; } } /* Stacks Reschedule above Cancel appointment on mobile. */

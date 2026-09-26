@@ -1,4 +1,4 @@
-﻿using ForgeAndFade.Api.Models; // Imports the model classes so this database context can expose them as database tables.
+using ForgeAndFade.Api.Models; // Imports the model classes so this database context can expose them as database tables.
 
 using Microsoft.EntityFrameworkCore; // Imports Entity Framework Core types such as DbContext and DbSet.
 
@@ -24,7 +24,8 @@ namespace ForgeAndFade.Api.Data // Places this class inside the Data namespace b
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) // Overrides Entity Framework's model-building method so we can configure relationships and database rules explicitly.
         {
-            base.OnModelCreating(modelBuilder); // Runs Entity Framework Core's normal model configuration before applying our custom rules.
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Booking>().Property(x => x.IsForChild).HasDefaultValue(false); // Runs Entity Framework Core's normal model configuration before applying our custom rules.
 
             modelBuilder.Entity<Booking>()
                 .Property(booking => booking.Status)
