@@ -3,12 +3,13 @@ using System.Security.Claims; // Reads the signed customer identifier.
 using ForgeAndFade.Api.Data; // Accesses the database.
 using ForgeAndFade.Api.Enums; // Uses booking states.
 using ForgeAndFade.Api.Models; // Uses booking and loyalty entities.
+using ForgeAndFade.Api.Services; // Makes the booking email sender available to this controller.
 using Microsoft.AspNetCore.Authorization; // Protects private booking routes.
 using Microsoft.AspNetCore.Mvc; // Defines API responses.
 using Microsoft.EntityFrameworkCore; // Executes SQL Server queries.
 namespace ForgeAndFade.Api.Controllers; // Groups booking routes.
 public record BookingInput(int ServiceId, int BarberId, DateTime BookingDate, TimeSpan StartTime, string? CustomerNotes, bool IsForChild = false); // Accepts only customer-controlled booking fields.
-[ApiController, Route("api/bookings")] public class BookingsController(ApplicationDbContext db, IConfiguration config, TimeProvider clock) : ControllerBase // Manages availability, reservations and completion.
+[ApiController, Route("api/bookings")] public class BookingsController(ApplicationDbContext db, IConfiguration config, TimeProvider clock, IBookingConfirmationEmailSender bookingEmailSender, ILogger<BookingsController> logger) : ControllerBase // Manages availability, reservations and completion.
 {
     private int CustomerId => int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : 0; // Resolves the signed-in customer.
     private DateTime LocalNow => clock.GetUtcNow().ToOffset(TimeSpan.FromHours(2)).DateTime; // Uses South African Standard Time, UTC+02:00 year round.
@@ -110,6 +111,20 @@ public record BookingInput(int ServiceId, int BarberId, DateTime BookingDate, Ti
         {
             await db.SaveChangesAsync();
             await transaction.CommitAsync();
+            try // Attempts notification only after the appointment has been saved.
+            { // Keeps email problems separate from booking persistence.
+                var customer = await db.Customers.AsNoTracking().Where(x => x.CustomerId == CustomerId).Select(x => new { x.Email, x.FirstName }).FirstOrDefaultAsync(); // Retrieves the booking customer without tracking changes.
+                if (customer is not null && !string.IsNullOrWhiteSpace(customer.Email)) // Sends only when a recipient address exists.
+                { // Begins creation of the confirmation details.
+                    var details = new BookingEmailDetails(booking.BookingId, customer.Email, customer.FirstName, service.ServiceName, barber.FirstName + " " + barber.LastName, booking.BookingDate, booking.StartTime, booking.EndTime, service.Price, booking.IsForChild); // Passes the saved appointment details to the email service.
+                    await bookingEmailSender.SendAsync(details, HttpContext.RequestAborted); // Sends the branded confirmation, calendar attachment and directions.
+                } // Ends the recipient block.
+                else logger.LogWarning("Booking {BookingId} has no customer email address.", booking.BookingId); // Records why no confirmation was sent.
+            } // Ends the email attempt.
+            catch (Exception exception) // Handles delivery or customer lookup failure after the booking commits.
+            { // Begins notification failure handling.
+                logger.LogError(exception, "Booking {BookingId} was saved but its confirmation email failed.", booking.BookingId); // Records the failure for investigation.
+            } // Ends notification failure handling.
             return id.HasValue ? Ok(Appointment(booking)) : Created($"/api/bookings/{booking.BookingId}", Appointment(booking));
         }
         catch (DbUpdateException)

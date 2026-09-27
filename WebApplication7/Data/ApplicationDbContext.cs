@@ -10,6 +10,7 @@ namespace ForgeAndFade.Api.Data // Places this class inside the Data namespace b
         {
         }
 
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; } // Exposes reset tokens as a database table.
         public DbSet<Customer> Customers { get; set; } // Represents the Customers table and allows Entity Framework to query and save Customer objects.
 
         public DbSet<Barber> Barbers { get; set; } // Represents the Barbers table and allows Entity Framework to query and save Barber objects.
@@ -31,6 +32,8 @@ namespace ForgeAndFade.Api.Data // Places this class inside the Data namespace b
                 .Property(booking => booking.Status)
                 .HasConversion<string>(); // Stores enum names in the nvarchar(max) column created by InitialCreate.
 
+            modelBuilder.Entity<PasswordResetToken>().HasIndex(token => token.TokenHash).IsUnique(); // Makes token hashes unique.
+            modelBuilder.Entity<PasswordResetToken>().Property(token => token.TokenHash).HasMaxLength(64).IsRequired(); // Requires a SHA-256 hash.
             modelBuilder.Entity<Customer>() // Begins configuration for the Customer entity.
                 .HasIndex(customer => customer.Email) // Creates a database index on the customer's email address.
                 .IsUnique(); // Prevents two customer records from having the same email address.

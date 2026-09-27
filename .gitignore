@@ -14,3 +14,7 @@ publish-check/
 ForgeAndFade/
 **/Properties/ServiceDependencies/
 **/Properties/serviceDependencies*.json
+.tools/
+*.before-*
+*.backup
+*.bak

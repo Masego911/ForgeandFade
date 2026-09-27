@@ -1,4 +1,5 @@
 using ForgeAndFade.Api.Enums; // Imports the BookingStatus enum so this model can use strongly typed booking states.
+using Microsoft.EntityFrameworkCore; // Provides the decimal precision mapping attribute.
 
 namespace ForgeAndFade.Api.Models // Places the Booking model inside the application's Models namespace.
 {
@@ -13,6 +14,9 @@ namespace ForgeAndFade.Api.Models // Places the Booking model inside the applica
         public int BarberId { get; set; } // Stores the foreign-key identifier of the barber selected for the appointment.
 
         public int ServiceId { get; set; } // Stores the foreign-key identifier of the service selected by the customer.
+
+        [Precision(10, 2)] // Stores rand and cents using a fixed decimal precision.
+        public decimal? PriceAtBooking { get; set; } // Preserves the agreed service price; null identifies older bookings without a recorded price.
 
         public DateTime BookingDate { get; set; } // Stores the calendar date on which the appointment will take place.
 

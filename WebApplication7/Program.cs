@@ -8,6 +8,8 @@ builder.Services.AddSwaggerGen(); // Provides development API documentation.
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); // Keeps the supplied SQL Server database.
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => { options.Cookie.HttpOnly = true; options.Cookie.SameSite = SameSiteMode.Lax; options.Cookie.SecurePolicy = CookieSecurePolicy.Always; options.ExpireTimeSpan = TimeSpan.FromDays(7); options.Events.OnRedirectToLogin = context => { context.Response.StatusCode = 401; return Task.CompletedTask; }; options.Events.OnRedirectToAccessDenied = context => { context.Response.StatusCode = 403; return Task.CompletedTask; }; }); // Keeps credentials out of browser-accessible storage.
 builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddSingleton<ForgeAndFade.Api.Services.IPasswordResetEmailSender, ForgeAndFade.Api.Services.AzurePasswordResetEmailSender>();
+builder.Services.AddSingleton<ForgeAndFade.Api.Services.IBookingConfirmationEmailSender, ForgeAndFade.Api.Services.AzureBookingConfirmationEmailSender>(); // Makes the booking email sender available to the controller. // Registers the Azure email sender for password-reset requests.
 builder.Services.AddAuthorization(); // Enables protected customer actions.
 var app = builder.Build(); // Creates the HTTP application.
 if (app.Environment.IsDevelopment()) { app.UseSwagger(); app.UseSwaggerUI(); } // Exposes API documentation locally.
