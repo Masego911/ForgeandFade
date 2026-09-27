@@ -90,3 +90,11 @@ These features are planned and are not yet available on the website:
 - Let customers review a service after a completed appointment.
 - Link each review to its booking to prevent reviews from people who did not receive the service.
 - Give administrators a way to moderate reviews before they appear publicly.
+
+  ### AI customer assistant
+
+- Replace or extend the current rule-based help chat with an AI assistant that can understand questions phrased in different ways.
+- Ground its answers in the current service catalogue, prices, opening hours, booking rules and approved studio information.
+- Help customers find a suitable service and direct them to the booking page without making a booking on their behalf.
+- Escalate questions it cannot answer reliably to the studio instead of inventing prices, availability or policies.
+- Protect customer information and keep the AI service credentials on the server.
