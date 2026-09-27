@@ -91,7 +91,7 @@ These features are planned and are not yet available on the website:
 - Link each review to its booking to prevent reviews from people who did not receive the service.
 - Give administrators a way to moderate reviews before they appear publicly.
 
-  ### AI customer assistant
+### AI customer assistant
 
 - Replace or extend the current rule-based help chat with an AI assistant that can understand questions phrased in different ways.
 - Ground its answers in the current service catalogue, prices, opening hours, booking rules and approved studio information.
