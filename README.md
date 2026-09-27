@@ -68,4 +68,25 @@ The live website link is at the top of this README. Pushing source code to GitHu
 
 ## Planned work
 
-Service reviews, a dedicated admin login, and a revenue and productivity analytics dashboard are planned. They are not currently implemented.
+These features are planned and are not yet available on the website:
+
+### Admin access and operations
+
+- Add a dedicated admin login with role-based authorisation, separate from customer accounts.
+- Give authorised staff a dashboard to view appointments, customers, services and barber schedules.
+- Allow authorised staff to mark appointments as completed or no-show through the admin interface. The current completion API uses an operator key, but there is no admin interface yet.
+- Record who made an administrative change and when it happened.
+
+### Revenue and productivity dashboard
+
+- Show income from completed appointments, using the price recorded for each booking so later price changes do not alter historical reports.
+- Show bookings, completed visits, cancellations and no-shows over a selected date range.
+- Compare revenue and completed appointments by service and by barber.
+- Show barber productivity using booked time, completed appointments and available working time.
+- Add date filters and clear visual summaries so staff can inspect daily, weekly and monthly performance.
+
+### Service reviews
+
+- Let customers review a service after a completed appointment.
+- Link each review to its booking to prevent reviews from people who did not receive the service.
+- Give administrators a way to moderate reviews before they appear publicly.
