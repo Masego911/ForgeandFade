@@ -2,27 +2,70 @@
 
 [Open the live website](https://forgeandfadeapi20260926201256-a3gja7fwesarfycb.southafricanorth-01.azurewebsites.net/)
 
-This repository includes password recovery and booking confirmation emails with calendar and map links. Service reviews, a dedicated admin login and an analytics dashboard are planned for the next phase.
+Forge & Fade is a barber booking website built with React, Vite, ASP.NET Core 10, Entity Framework Core and SQL Server. The ASP.NET Core application serves the production frontend and the API from the same website.
 
+## Customer features
 
-A fictional premium barber studio assessment project. The existing .NET 10, Entity Framework Core, SQL Server models and initial migration from the supplied starter are preserved. A React/Vite customer application lives in `frontend/`; its production build is copied into `WebApplication7/wwwroot/` and served by ASP.NET Core.
+- Browse services with their descriptions, prices and durations, and view barber profiles.
+- View the studio story, opening hours and contact page. The address links to Google Maps directions.
+- Register and log in with a secure, HTTP-only authentication cookie. Registration validates names, email address, South African phone number and password length.
+- Request a password reset email. Reset links expire after 30 minutes and can be used once.
+- Choose a service, barber, date and available time. The server checks opening hours, service duration and existing appointments before confirming a booking.
+- Keep one future confirmed appointment for yourself at a time. A separate appointment for a child is allowed when the Junior cut service is selected.
+- If an appointment for yourself already exists, use the booking flow to cancel it or reschedule it. Rescheduling is allowed only more than three hours before the existing appointment begins, using South African time. A future confirmed appointment can be cancelled before it starts.
+- Receive a booking confirmation email when Azure email delivery is configured. The email includes appointment details, calendar options and directions through Google Maps and Apple Maps. A saved booking remains valid if its email fails to send.
+- View bookings, completed visits, lifetime spend and loyalty points in the customer account. Points are awarded when an operator marks a finished appointment as completed. Reward redemption is not implemented.
+- Use the website's help chat for supported questions about services, prices, hours, bookings and cancellations. It uses predefined answers and catalogue data.
+- Use the website on mobile, tablet and desktop. The landing page includes a video where motion preferences allow it.
 
-## Run on Windows
+The catalogue seeds five barber profiles and eleven services where those records are missing. Duplicate active service names are retired without deleting existing booking references. Prices and durations for the newer colouring, highlights, dread retwist and twist services are provisional and should be reviewed before public use.
 
-1. Install the .NET 10 SDK, Node.js 20.19+ or 22.12+, and SQL Server LocalDB or SQL Server.
-2. In PowerShell, run `cd frontend`, `npm ci`, then `npm run build`.
-3. Set `ConnectionStrings__DefaultConnection` to your SQL Server connection string if you do not use LocalDB. The included `appsettings.json` uses LocalDB for local development only.
-4. From the project root, run `dotnet run --project WebApplication7/ForgeAndFade.Api.csproj --launch-profile https`. Open the HTTPS address printed by ASP.NET Core. The application applies the included initial migration and seeds five barbers and seven services when the catalogue is empty.
-5. For hot reload, run `npm run dev` in `frontend/` while the HTTPS API is running. The Vite development proxy expects `https://localhost:7294` as configured in `frontend/vite.config.js`.
+## Technology
 
-No API password, database credential or admin key is shipped. Configure deployment settings using environment variables or your hosting service's secret manager. Use a publicly reachable SQL Server instance or managed SQL Server with an encrypted connection. Provide `ConnectionStrings__DefaultConnection` and, if operator completion is needed, `Admin__CompletionKey` as a long random secret. Serve the customer site and API from one HTTPS origin so the signed HTTP-only session cookie works. The supplied build in `wwwroot` can be regenerated with `npm ci` and `npm run build`.
+- Frontend: React, React Router and Vite.
+- Backend: ASP.NET Core 10 Web API.
+- Database: SQL Server with Entity Framework Core migrations.
+- Email: Azure Communication Services.
+- Authentication: ASP.NET Core cookie authentication and hashed passwords.
 
-## Booking and loyalty
+Database migrations and catalogue seeding run when the API starts. The frontend production build is written to `WebApplication7/wwwroot`.
 
-The server calculates end time from service duration, checks business hours, limits advance booking to 90 days, and checks overlap in a serialisable SQL transaction. Customers can cancel their own future confirmed appointments. Completion is an operator action through `POST /api/bookings/{id}/complete` with the configured `X-Admin-Key` header after the visit ends. That action awards one point per full rand and writes a loyalty transaction atomically. It is disabled if `Admin__CompletionKey` is not set. Reward thresholds are displayed as illustrative; online redemption is not implemented.
+## Run locally on Windows
 
-Accounts use ASP.NET Core's salted password hasher and a signed, HTTP-only, secure cookie. Public catalogue API routes are read-only. Booking records and customer details are scoped to the signed-in user. Contact details and the studio are fictional and should be replaced before a real business launch.
+Install the .NET 10 SDK, Node.js and SQL Server or SQL Server LocalDB. Configure a working `ConnectionStrings__DefaultConnection` value for the API. Then open PowerShell in the original project folder and run:
 
-## Checks
+~~~powershell
+Set-Location .\frontend # Enter the React project.
+npm.cmd ci # Install the dependency versions in package-lock.json.
+npm.cmd run build # Build the frontend into the ASP.NET Core wwwroot folder.
+Set-Location .. # Return to the solution folder.
+dotnet dev-certs https --trust # Trust the local development HTTPS certificate.
+dotnet run --project .\WebApplication7\ForgeAndFade.Api.csproj --launch-profile https # Start the API and serve the built website.
+~~~
 
-Run `npm run build` in `frontend/` and `dotnet build WebApplication7.slnx` at the root. On a machine with SQL Server, verify registration, duplicate email rejection, sign-in, availability, booking, conflicting booking, cancellation, calendar exports and operator completion. The build environment used to package this archive had Node.js but no .NET SDK or SQL Server, so the backend build and live database flows require verification on a .NET-capable machine before submission. The assessment PDF requires a live public URL as the sole final submission; this ZIP is the requested development deliverable, not that final submission URL.
+For frontend hot reload, run `npm.cmd run dev` from `frontend` while the HTTPS API is running. The development proxy targets `https://localhost:7294`.
+
+## Configuration
+
+Store connection strings and keys in environment variables, Visual Studio user secrets or Azure App Service settings. Do not commit them to GitHub.
+
+| Setting | Purpose |
+| --- | --- |
+| `ConnectionStrings__DefaultConnection` | SQL Server connection used by Entity Framework Core. |
+| `AzureCommunicationServices__ConnectionString` | Azure Communication Services email connection. |
+| `AzureCommunicationServices__SenderAddress` | Authorised sender address for account and booking emails. |
+| `PasswordReset__PageUrl` | HTTPS URL of the website's reset-password page. |
+| `Booking__StudioAddress` | Address used in booking emails and map links. |
+| `Admin__CompletionKey` | Operator key for the existing booking-completion API action. |
+
+The completion key protects one operator API action; the website does not yet have a dedicated admin login or admin dashboard. The contact details shown in the application should be checked before using the site for a real business.
+
+## Verification and deployment
+
+On 27 September 2026, `dotnet build .\WebApplication7\ForgeAndFade.Api.csproj` and `npm.cmd run build` both completed successfully in the original Visual Studio project. These build checks do not prove every live database and email flow. Password reset and booking email delivery also depend on the Azure settings above.
+
+The live website link is at the top of this README. Pushing source code to GitHub does not, by itself, publish the new build to Azure; publish the updated ASP.NET Core project separately when you are ready to update the live website.
+
+## Planned work
+
+Service reviews, a dedicated admin login, and a revenue and productivity analytics dashboard are planned. They are not currently implemented.
